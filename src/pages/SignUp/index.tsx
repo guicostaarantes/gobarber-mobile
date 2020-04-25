@@ -4,6 +4,8 @@ import { Image, KeyboardAvoidingView, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 
+import { useNavigation } from '@react-navigation/native';
+
 import {
   Container,
   Title,
@@ -19,6 +21,8 @@ import logoImg from '../../assets/logo.png';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const SignUp: React.FC = () => {
+  const navigation = useNavigation();
+
   return (
     <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ flex: 1 }}>
@@ -38,7 +42,7 @@ const SignUp: React.FC = () => {
           <Button onPress={() => console.log('')}>Entrar</Button>
         </Container>
       </ScrollView>
-      <SignUpContainer>
+      <SignUpContainer onPress={() => navigation.goBack()}>
         <Icon name="arrow-left" size={20} color="#ff9000" />
         <SignUpText>Voltar para logon</SignUpText>
       </SignUpContainer>

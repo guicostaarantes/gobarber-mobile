@@ -4,6 +4,8 @@ import { Image, KeyboardAvoidingView, Platform, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 
+import { useNavigation } from '@react-navigation/native';
+
 import {
   Container,
   Title,
@@ -19,6 +21,8 @@ import logoImg from '../../assets/logo.png';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const SignIn: React.FC = () => {
+  const navigation = useNavigation();
+
   return (
     <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ flex: 1 }}>
@@ -35,7 +39,7 @@ const SignIn: React.FC = () => {
           </ForgotContainer>
         </Container>
       </ScrollView>
-      <SignUpContainer>
+      <SignUpContainer onPress={() => navigation.navigate('sign-up')}>
         <Icon name="log-in" size={20} color="#ff9000" />
         <SignUpText>Criar nova conta</SignUpText>
       </SignUpContainer>
