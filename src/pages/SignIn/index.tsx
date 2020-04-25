@@ -20,10 +20,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const SignIn: React.FC = () => {
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={{ flex: 1 }}
-    >
+    <KeyboardAvoidingView behavior="height" style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ flex: 1 }}>
         <Container>
           <Image source={logoImg} />
