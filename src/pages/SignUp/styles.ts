@@ -15,17 +15,7 @@ export const Title = styled.Text`
   margin: 64px 0 24px 0;
 `;
 
-export const ForgotContainer = styled.TouchableOpacity`
-  margin: 24px;
-`;
-
-export const ForgotText = styled.Text`
-  font-family: 'RobotoSlab-Medium';
-  font-size: 16px;
-  color: #f4ede8;
-`;
-
-export const SignUpContainer = styled.TouchableOpacity`
+export const BackContainer = styled.TouchableOpacity`
   flex-direction: row;
   position: absolute;
   left: 0;
@@ -39,7 +29,7 @@ export const SignUpContainer = styled.TouchableOpacity`
   background: #312e38;
 `;
 
-export const SignUpText = styled.Text`
+export const BackText = styled.Text`
   font-family: 'RobotoSlab-Medium';
   font-size: 16px;
   color: #ff9000;
