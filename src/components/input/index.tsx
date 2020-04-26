@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 
-import { TextInputProps } from 'react-native';
+import { TextInputProps, TextInput } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 
 import { useField } from '@unform/core';
 
-import { Container, TextInput } from './styles';
+import { Container, MyTextInput } from './styles';
 
 interface InputProps extends TextInputProps {
   name: string;
@@ -19,6 +19,7 @@ interface InputValueRef {
 
 const Input: React.FC<InputProps> = ({ name, icon, ...otherProps }) => {
   const { registerField, defaultValue, error, fieldName } = useField(name);
+  const textInputRef = useRef<TextInput>(null);
   const inputValueRef = useRef<InputValueRef>({ value: defaultValue });
 
   useEffect(() => {
@@ -30,9 +31,10 @@ const Input: React.FC<InputProps> = ({ name, icon, ...otherProps }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container>
+    <Container onTouchEnd={() => textInputRef.current?.focus()}>
       <Icon name={icon} size={20} color="#666360" />
-      <TextInput
+      <MyTextInput
+        ref={textInputRef}
         placeholderTextColor="#666360"
         onChangeText={(value) => {
           inputValueRef.current.value = value;
