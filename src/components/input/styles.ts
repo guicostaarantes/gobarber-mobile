@@ -1,7 +1,12 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
 
-export const Container = styled.View`
+interface ContainerProps {
+  isFocused: boolean;
+  isFilled: boolean;
+}
+
+export const Container = styled.View<ContainerProps>`
   flex-direction: row;
   align-items: center;
   width: 100%;
@@ -10,6 +15,13 @@ export const Container = styled.View`
   background: #232129;
   border-radius: 10px;
   margin-bottom: 8px;
+  border-width: 2px;
+  border-color: #232129;
+  ${(props) =>
+    props.isFocused &&
+    css`
+      border-color: #ff9000;
+    `}
 `;
 
 export const MyTextInput = styled.TextInput`
