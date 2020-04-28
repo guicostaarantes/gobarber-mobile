@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Alert,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -21,6 +22,8 @@ import { useKeyboard } from '@react-native-community/hooks';
 
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
+
+import api from '../../services/api';
 
 import { Container, Title, BackContainer, BackText } from './styles';
 import Input from '../../components/input';
@@ -56,10 +59,23 @@ const SignUp: React.FC = () => {
           .oneOf([Yup.ref('password')], 'Confirmação incorreta'),
       });
       await schema.validate(data, { abortEarly: false });
+
+      await api.post('users', data);
+      Alert.alert(
+        'Usuário criado',
+        'Utilize suas credenciais para acessar a aplicação.',
+      );
+      navigation.goBack();
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
         formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
+      } else {
+        console.log(err);
+        Alert.alert(
+          'Erro na requisição',
+          'Não foi possível criar o seu usuário nesse momento.',
+        );
       }
     }
   }, []);

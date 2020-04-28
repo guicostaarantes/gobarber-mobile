@@ -34,6 +34,7 @@ import Input from '../../components/input';
 import Button from '../../components/button';
 
 import logoImg from '../../assets/logo.png';
+import { useUser } from '../../context/UserContext';
 
 interface SignInFormData {
   email: string;
@@ -41,6 +42,7 @@ interface SignInFormData {
 }
 
 const SignIn: React.FC = () => {
+  const { signIn } = useUser();
   const navigation = useNavigation();
   const keyboard = useKeyboard();
 
@@ -55,6 +57,7 @@ const SignIn: React.FC = () => {
         password: Yup.string().required('Senha obrigatória'),
       });
       await schema.validate(data, { abortEarly: false });
+      await signIn(data);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
