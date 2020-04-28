@@ -19,6 +19,9 @@ import { Form } from '@unform/mobile';
 
 import { useKeyboard } from '@react-native-community/hooks';
 
+import * as Yup from 'yup';
+import getValidationErrors from '../../utils/getValidationErrors';
+
 import {
   Container,
   Title,
@@ -32,13 +35,32 @@ import Button from '../../components/button';
 
 import logoImg from '../../assets/logo.png';
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const keyboard = useKeyboard();
 
   const formRef = useRef<FormHandles>(null);
-  const handleSubmit = useCallback((data) => {
-    console.log(data);
+  const handleSubmit = useCallback(async (data: SignInFormData) => {
+    try {
+      formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
+      const schema = Yup.object().shape({
+        email: Yup.string()
+          .required('Email obrigatório')
+          .email('Email inválido'),
+        password: Yup.string().required('Senha obrigatória'),
+      });
+      await schema.validate(data, { abortEarly: false });
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+        formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
+      }
+    }
   }, []);
 
   return (

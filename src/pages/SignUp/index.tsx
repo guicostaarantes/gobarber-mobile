@@ -19,19 +19,49 @@ import { Form } from '@unform/mobile';
 
 import { useKeyboard } from '@react-native-community/hooks';
 
+import * as Yup from 'yup';
+import getValidationErrors from '../../utils/getValidationErrors';
+
 import { Container, Title, BackContainer, BackText } from './styles';
 import Input from '../../components/input';
 import Button from '../../components/button';
 
 import logoImg from '../../assets/logo.png';
 
+interface SignUpFormData {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 const SignUp: React.FC = () => {
   const navigation = useNavigation();
   const keyboard = useKeyboard();
 
   const formRef = useRef<FormHandles>(null);
-  const handleSubmit = useCallback((data) => {
-    console.log(data);
+  const handleSubmit = useCallback(async (data: SignUpFormData) => {
+    try {
+      formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
+      const schema = Yup.object().shape({
+        fullName: Yup.string().required('Nome obrigatório'),
+        email: Yup.string()
+          .required('Email obrigatório')
+          .email('Email inválido'),
+        password: Yup.string()
+          .required('Senha obrigatória')
+          .min(8, 'Mínimo de 8 dígitos'),
+        confirmPassword: Yup.string()
+          .required('Senha obrigatória')
+          .oneOf([Yup.ref('password')], 'Confirmação incorreta'),
+      });
+      await schema.validate(data, { abortEarly: false });
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+        formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
+      }
+    }
   }, []);
 
   return (

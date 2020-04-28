@@ -46,6 +46,7 @@ const Input: React.FC<InputProps> = ({ name, icon, ...otherProps }) => {
     <Container
       isFocused={isFocused}
       isFilled={isFilled}
+      isErrored={!!error}
       onTouchEnd={() => textInputRef.current?.focus()}
     >
       <Icon
