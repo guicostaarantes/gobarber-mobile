@@ -1,8 +1,8 @@
 import React from 'react';
+import { View, ActivityIndicator } from 'react-native';
 import { useUser } from '../context/UserContext';
 import AppRoutes from './AppRoutes';
 import AuthRoutes from './AuthRoutes';
-import { View, ActivityIndicator } from 'react-native';
 
 const Routes: React.FC = () => {
   const { loading, token } = useUser();

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useRef, useCallback } from 'react';
 
 import {
   Image,
@@ -43,42 +43,44 @@ const SignUp: React.FC = () => {
   const keyboard = useKeyboard();
 
   const formRef = useRef<FormHandles>(null);
-  const handleSubmit = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
-      const schema = Yup.object().shape({
-        fullName: Yup.string().required('Nome obrigatório'),
-        email: Yup.string()
-          .required('Email obrigatório')
-          .email('Email inválido'),
-        password: Yup.string()
-          .required('Senha obrigatória')
-          .min(8, 'Mínimo de 8 dígitos'),
-        confirmPassword: Yup.string()
-          .required('Senha obrigatória')
-          .oneOf([Yup.ref('password')], 'Confirmação incorreta'),
-      });
-      await schema.validate(data, { abortEarly: false });
+  const handleSubmit = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
+        const schema = Yup.object().shape({
+          fullName: Yup.string().required('Nome obrigatório'),
+          email: Yup.string()
+            .required('Email obrigatório')
+            .email('Email inválido'),
+          password: Yup.string()
+            .required('Senha obrigatória')
+            .min(8, 'Mínimo de 8 dígitos'),
+          confirmPassword: Yup.string()
+            .required('Senha obrigatória')
+            .oneOf([Yup.ref('password')], 'Confirmação incorreta'),
+        });
+        await schema.validate(data, { abortEarly: false });
 
-      await api.post('users', data);
-      Alert.alert(
-        'Usuário criado',
-        'Utilize suas credenciais para acessar a aplicação.',
-      );
-      navigation.goBack();
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
-      } else {
-        console.log(err);
+        await api.post('users', data);
         Alert.alert(
-          'Erro na requisição',
-          'Não foi possível criar o seu usuário nesse momento.',
+          'Usuário criado',
+          'Utilize suas credenciais para acessar a aplicação.',
         );
+        navigation.goBack();
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
+        } else {
+          Alert.alert(
+            'Erro na requisição',
+            'Não foi possível criar o seu usuário nesse momento.',
+          );
+        }
       }
-    }
-  }, []);
+    },
+    [navigation],
+  );
 
   return (
     <KeyboardAvoidingView
@@ -115,13 +117,13 @@ const SignUp: React.FC = () => {
                 name="password"
                 icon="lock"
                 placeholder="Senha"
-                secureTextEntry={true}
+                secureTextEntry
               />
               <Input
                 name="confirmPassword"
                 icon="lock"
                 placeholder="Confirmar Senha"
-                secureTextEntry={true}
+                secureTextEntry
               />
               <Button onPress={() => formRef.current?.submitForm()}>
                 Cadastrar

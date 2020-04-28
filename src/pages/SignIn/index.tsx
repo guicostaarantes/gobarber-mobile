@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 import {
   Image,
@@ -47,24 +47,27 @@ const SignIn: React.FC = () => {
   const keyboard = useKeyboard();
 
   const formRef = useRef<FormHandles>(null);
-  const handleSubmit = useCallback(async (data: SignInFormData) => {
-    try {
-      formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .required('Email obrigatório')
-          .email('Email inválido'),
-        password: Yup.string().required('Senha obrigatória'),
-      });
-      await schema.validate(data, { abortEarly: false });
-      await signIn(data);
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
+  const handleSubmit = useCallback(
+    async (data: SignInFormData) => {
+      try {
+        formRef.current?.setErrors({}); // eslint-disable-line no-unused-expressions
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('Email obrigatório')
+            .email('Email inválido'),
+          password: Yup.string().required('Senha obrigatória'),
+        });
+        await schema.validate(data, { abortEarly: false });
+        await signIn(data);
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors); // eslint-disable-line no-unused-expressions
+        }
       }
-    }
-  }, []);
+    },
+    [signIn],
+  );
 
   return (
     <KeyboardAvoidingView
@@ -94,7 +97,7 @@ const SignIn: React.FC = () => {
                 name="password"
                 icon="lock"
                 placeholder="Senha"
-                secureTextEntry={true}
+                secureTextEntry
               />
               <Button onPress={() => formRef.current?.submitForm()}>
                 Entrar
